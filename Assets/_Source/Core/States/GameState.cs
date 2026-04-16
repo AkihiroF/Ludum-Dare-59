@@ -14,7 +14,7 @@ namespace Core.States
 
         public override void Enter()
         {
-            _playerInputActions.Move.Enable();
+            _playerInputActions.Player.Enable();
         }
     }
 }

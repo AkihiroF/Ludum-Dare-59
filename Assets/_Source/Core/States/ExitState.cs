@@ -20,9 +20,9 @@ namespace Core.States
 
         public override void Enter()
         {
-            _playerInputActions.Move.Look.performed -= _inputHandler.InputLook;
-            _playerInputActions.Move.Moving.performed -= _inputHandler.InputMove;
-            _playerInputActions.Move.Disable();
+            _playerInputActions.Player.Rotate.performed -= _inputHandler.InputLook;
+            _playerInputActions.Player.Moving.performed -= _inputHandler.InputMove;
+            _playerInputActions.Player.Disable();
             _sceneLoader.SimpleLoadScene();
         }
     }

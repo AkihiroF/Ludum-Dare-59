@@ -3,13 +3,22 @@
     "name": "PlayerInputActions",
     "maps": [
         {
-            "name": "Move",
-            "id": "75567ff3-8af0-4b03-b52f-ddaeb7c568ca",
+            "name": "Player",
+            "id": "b1205e5f-f105-48fa-97d8-361ad362721c",
             "actions": [
                 {
                     "name": "Moving",
                     "type": "Value",
-                    "id": "bbe03450-b5c8-4ad7-9895-d1ff802f6246",
+                    "id": "ffbfbf14-c0f3-4b0d-8a02-2c70a7f74251",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Rotate",
+                    "type": "Value",
+                    "id": "3932dc5a-39e7-46da-a7a8-ff0b62c13b43",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
@@ -18,18 +27,18 @@
                 {
                     "name": "Look",
                     "type": "Value",
-                    "id": "cb3103ff-4955-4cf7-b40b-5afacb725d7d",
+                    "id": "ab0f4f82-31c6-42fd-af0d-6546cfefb5ea",
                     "expectedControlType": "Vector2",
-                    "processors": "InvertVector2(invertX=false,invertY=false)",
-                    "interactions": "",
+                    "processors": "",
+                    "interactions": "Press(behavior=2)",
                     "initialStateCheck": true
                 }
             ],
             "bindings": [
                 {
-                    "name": "2D Vector",
-                    "id": "81ae50b8-1b8c-4c2f-a5f8-5abe0a79862c",
-                    "path": "2DVector(mode=1)",
+                    "name": "VectorMoving",
+                    "id": "726302b6-bb9f-493d-a130-783af42be58b",
+                    "path": "2DVector",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -38,73 +47,113 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "Up",
-                    "id": "686315e6-40df-48ac-9396-540a6f426e0a",
+                    "name": "up",
+                    "id": "6aef3efe-68f3-4aa2-9d45-47d31766b0b1",
                     "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "PlayerSheme",
                     "action": "Moving",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "Down",
-                    "id": "3b467717-5031-40ae-9766-3d8571fea920",
+                    "name": "down",
+                    "id": "13e25b63-7c6e-4e6b-a37f-7f8906e66d17",
                     "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "PlayerSheme",
                     "action": "Moving",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "Left",
-                    "id": "18caec9a-6320-4921-9a0d-cde5d1b1d5d9",
+                    "name": "left",
+                    "id": "0f0ffe49-7dff-4793-b598-f19356bcddee",
                     "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "PlayerSheme",
                     "action": "Moving",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "Right",
-                    "id": "b7f91ca3-ba0c-4c7a-8446-cd219bc73186",
+                    "name": "right",
+                    "id": "82d1be34-491a-4d28-92d7-153f6bb25c44",
                     "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "PlayerSheme",
                     "action": "Moving",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
                     "name": "",
-                    "id": "d7bb9c4e-9443-466f-9620-863945c40667",
-                    "path": "<Gamepad>/rightStick",
+                    "id": "177b67a5-012c-45d6-8ea4-399c1bfb225c",
+                    "path": "<Mouse>/position",
                     "interactions": "",
-                    "processors": "ScaleVector2(x=-100,y=100)",
-                    "groups": ";Gamepad",
-                    "action": "Look",
+                    "processors": "",
+                    "groups": "PlayerSheme",
+                    "action": "Rotate",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "50c59f84-08eb-4113-b180-3aa44a348141",
-                    "path": "<Pointer>/delta",
+                    "id": "7f1eb4c0-d783-4ea0-82c6-433c8168697b",
+                    "path": "<Mouse>/delta",
                     "interactions": "",
-                    "processors": "InvertVector2(invertX=false)",
-                    "groups": ";Keyboard&Mouse",
+                    "processors": "",
+                    "groups": "",
                     "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Interface",
+            "id": "8644aaf3-6d20-497d-ade7-7a94164b1e42",
+            "actions": [
+                {
+                    "name": "Paused",
+                    "type": "Button",
+                    "id": "61e31267-ad8d-411d-8274-5d87f6f16265",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "db94ca98-649b-4d77-8832-c1b90ea38dc7",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Paused",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
             ]
         }
     ],
-    "controlSchemes": []
+    "controlSchemes": [
+        {
+            "name": "PlayerSheme",
+            "bindingGroup": "PlayerSheme",
+            "devices": [
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
 }
