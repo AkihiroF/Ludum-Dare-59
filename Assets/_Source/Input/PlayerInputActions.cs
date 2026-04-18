@@ -228,7 +228,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""Paused"",
                     ""type"": ""Button"",
                     ""id"": ""61e31267-ad8d-411d-8274-5d87f6f16265"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -238,7 +238,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""db94ca98-649b-4d77-8832-c1b90ea38dc7"",
-                    ""path"": ""<Keyboard>/tab"",
+                    ""path"": ""<Keyboard>/p"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

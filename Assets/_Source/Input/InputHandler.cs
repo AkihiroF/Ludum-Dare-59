@@ -1,5 +1,6 @@
 using System;
 using Camera;
+using Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Zenject;
@@ -10,6 +11,7 @@ namespace Input
     {
         [SerializeField] private CameraMover cameraMover;
         [SerializeField] private CameraInteraction cameraInteraction;
+        [SerializeField] private GameStateSwitcher gameStateSwitcher;
         private PlayerInputActions _playerInputActions;
         [Inject]
         public void Init(PlayerInputActions playerInputActions)
@@ -22,6 +24,13 @@ namespace Input
         {
             _playerInputActions.Player.Sprint.performed += OnSprint;
             _playerInputActions.Player.Interact.performed += OnInteract;
+
+            _playerInputActions.Interface.Paused.performed += TurnOnPause;
+        }
+
+        private void TurnOnPause(InputAction.CallbackContext obj)
+        {
+            gameStateSwitcher.Pause();
         }
 
         private void OnInteract(InputAction.CallbackContext obj)
@@ -49,6 +58,9 @@ namespace Input
         private void UnSubscribe()
         {
             _playerInputActions.Player.Sprint.performed -= OnSprint;
+            _playerInputActions.Player.Interact.performed -= OnInteract;
+
+            _playerInputActions.Interface.Paused.performed -= TurnOnPause;
         }
 
         private void OnDestroy()

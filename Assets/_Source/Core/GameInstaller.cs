@@ -11,7 +11,7 @@ namespace Core
     {
         [SerializeField] private SceneLoader sceneLoader;
         [SerializeField] private Bootstrapper bootstrapper;
-        [SerializeField] private GameStarter gameStarter;
+        [SerializeField] private GameStateSwitcher gameStateSwitcher;
         [SerializeField] private CameraMover cameraMover;
         [SerializeField] private  InputHandler inputHandler;
         public override void InstallBindings()
@@ -21,7 +21,7 @@ namespace Core
             Container.Bind<SceneLoader>().FromInstance(sceneLoader).AsSingle();
             BindInput();
             BindStateMachine();
-            Container.Bind<GameStarter>().FromInstance(gameStarter).AsSingle();
+            Container.Bind<GameStateSwitcher>().FromInstance(gameStateSwitcher).AsSingle();
             Container.Bind<Bootstrapper>().FromInstance(bootstrapper).AsSingle();
         }
 
@@ -35,6 +35,7 @@ namespace Core
         {
             Container.Bind<AGameState>().To<InitState>().AsSingle();
             Container.Bind<AGameState>().To<GameState>().AsSingle();
+            Container.Bind<AGameState>().To<PauseState>().AsSingle();
             Container.Bind<AGameState>().To<ExitState>().AsSingle();
             Container.Bind<StateMachine>().AsSingle();
         }

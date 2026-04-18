@@ -1,13 +1,16 @@
 using Core.CoreEvents;
 using Core.States;
+using DG.Tweening;
+using UI;
 using UnityEngine;
 using Utils;
 using Zenject;
 
 namespace Core
 {
-    public class GameStarter : MonoBehaviour
+    public class GameStateSwitcher : MonoBehaviour
     {
+        [SerializeField] private WindowStateSwitcher pauseWindow;
         [Inject]
         private StateMachine _stateMachine;
 
@@ -16,20 +19,28 @@ namespace Core
             Signals.Get<OnInitFinished>().AddListener(StartGame);
         }
 
-        private void StartGame()
+        public void StartGame()
         {
+            pauseWindow.ChangeState(false);
             _stateMachine.SwitchGameState<GameState>();
-            Debug.Log("GameStarted");
+        }
+
+        public void Pause()
+        {
+            pauseWindow.ChangeState();
+            _stateMachine.SwitchGameState<PauseState>();
         }
 
         public void ExitGame()
         {
+            pauseWindow.ChangeState(false);
             _stateMachine.SwitchGameState<ExitState>();
         }
 
         private void OnDestroy()
         {
             Signals.Get<OnInitFinished>().RemoveListener(StartGame);
+            DOTween.KillAll();
         }
     }
 }

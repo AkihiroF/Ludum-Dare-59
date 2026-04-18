@@ -1,3 +1,4 @@
+using UnityEngine;
 using Utils;
 using Zenject;
 
@@ -18,6 +19,7 @@ namespace Core.States
         public override void Enter()
         {
             _playerInputActions.Player.Disable();
+            _playerInputActions.Interface.Disable();
             _sceneLoader.SimpleLoadScene();
         }
     }

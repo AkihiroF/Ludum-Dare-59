@@ -16,8 +16,15 @@ namespace Core.States
         public override void Enter()
         {
             _playerInputActions.Player.Enable();
+            _playerInputActions.Interface.Enable();
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+        }
+
+        public override void Exit()
+        {
+            _playerInputActions.Player.Disable();
+            _playerInputActions.Interface.Disable();
         }
     }
 }
