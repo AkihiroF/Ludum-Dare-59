@@ -22,7 +22,7 @@ namespace Camera
 
         public void ResetCameraPosition(Vector3 targetPosition)
         {
-            targetPosition.y = transform.position.y;
+            targetPosition.y = cinemachineCamera.transform.position.y;
             cinemachineCamera.transform.position = targetPosition;
             var targetDir = cinemachineCamera.transform.position - targetPosition;
             cinemachineCamera.ForceCameraPosition(targetPosition, Quaternion.LookRotation(targetDir));
@@ -69,7 +69,7 @@ namespace Camera
 
         private void Update()
         {
-            transform.position = Vector3.Lerp(transform.position, _movementFunc.Invoke(), Time.deltaTime * settings.movementSmooth);
+            cinemachineCamera.transform.position = Vector3.Lerp(cinemachineCamera.transform.position, _movementFunc.Invoke(), Time.deltaTime * settings.movementSmooth);
         }
 
         public void EnableSprint(bool isEnabled)

@@ -8,12 +8,12 @@ namespace Input
 {
     public class InputHandler : MonoBehaviour
     {
-        private CameraMover _cameraMover;
+        [SerializeField] private CameraMover cameraMover;
+        [SerializeField] private CameraInteraction cameraInteraction;
         private PlayerInputActions _playerInputActions;
         [Inject]
-        public void Init(CameraMover cameraMover, PlayerInputActions playerInputActions)
+        public void Init(PlayerInputActions playerInputActions)
         {
-            _cameraMover = cameraMover;
             _playerInputActions = playerInputActions;
             Subscribe();
         }
@@ -21,18 +21,25 @@ namespace Input
         private void Subscribe()
         {
             _playerInputActions.Player.Sprint.performed += OnSprint;
+            _playerInputActions.Player.Interact.performed += OnInteract;
+        }
+
+        private void OnInteract(InputAction.CallbackContext obj)
+        {
+            cameraInteraction.Interact();
         }
 
         private void OnSprint(InputAction.CallbackContext obj)
         {
             var isPressed = Math.Abs(obj.ReadValue<float>() - 1) < 1;
-            _cameraMover.EnableSprint(isPressed);
+            cameraMover.EnableSprint(isPressed);
         }
+        
 
         private void InputMove()
         {
             var moveValue = _playerInputActions.Player.Moving.ReadValue<Vector2>();
-            _cameraMover.UpdateMove(moveValue);
+            cameraMover.UpdateMove(moveValue);
         }
 
         private void Update()
