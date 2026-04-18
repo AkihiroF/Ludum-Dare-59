@@ -10,16 +10,19 @@ namespace Camera
         [SerializeField] private CameraSettings settings;
         [SerializeField] private CinemachineCamera cinemachineCamera;
         private Func<Vector3> _movementFunc;
+        private float _speedMovement;
         private Vector3 _moveDirection;
         public void Awake()
         {
             settings.area.Init();
+            _speedMovement = settings.speedMovement;
             ResetCameraPosition(settings.area.CenterOfArea);
-            _movementFunc = () => settings.area.GetPositionInArea(cinemachineCamera.transform.position + _moveDirection * settings.speedMovement);
+            _movementFunc = () => settings.area.GetPositionInArea(cinemachineCamera.transform.position + _moveDirection * _speedMovement);
         }
 
         public void ResetCameraPosition(Vector3 targetPosition)
         {
+            targetPosition.y = transform.position.y;
             cinemachineCamera.transform.position = targetPosition;
             var targetDir = cinemachineCamera.transform.position - targetPosition;
             cinemachineCamera.ForceCameraPosition(targetPosition, Quaternion.LookRotation(targetDir));
@@ -43,7 +46,6 @@ namespace Camera
 
         public void UpdateMove(Vector2 moveValue)
         {
-            Debug.Log(moveValue);
             Transform cam = cinemachineCamera.transform;
 
             Vector3 forward = cam.forward;
@@ -68,6 +70,11 @@ namespace Camera
         private void Update()
         {
             transform.position = Vector3.Lerp(transform.position, _movementFunc.Invoke(), Time.deltaTime * settings.movementSmooth);
+        }
+
+        public void EnableSprint(bool isEnabled)
+        {
+            _speedMovement = isEnabled ? settings.speedMovement* settings.sprintMultiplier : settings.speedMovement;
         }
     }
 }

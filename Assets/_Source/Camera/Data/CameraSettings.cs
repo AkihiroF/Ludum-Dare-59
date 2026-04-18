@@ -7,6 +7,7 @@ namespace Camera.Data
     {
         public AreaMovement area;
         public float speedMovement;
+        public float sprintMultiplier;
         public float movementSmooth;
     }
 }
