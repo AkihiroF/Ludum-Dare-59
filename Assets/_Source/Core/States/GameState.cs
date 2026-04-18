@@ -1,3 +1,4 @@
+using UnityEngine;
 using Zenject;
 
 namespace Core.States
@@ -15,6 +16,8 @@ namespace Core.States
         public override void Enter()
         {
             _playerInputActions.Player.Enable();
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
     }
 }

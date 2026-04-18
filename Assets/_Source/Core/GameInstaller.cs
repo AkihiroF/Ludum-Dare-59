@@ -1,3 +1,4 @@
+using Camera;
 using Core.States;
 using Input;
 using UnityEngine;
@@ -11,10 +12,12 @@ namespace Core
         [SerializeField] private SceneLoader sceneLoader;
         [SerializeField] private Bootstrapper bootstrapper;
         [SerializeField] private GameStarter gameStarter;
-        [SerializeField] private InputTester tester;
+        [SerializeField] private CameraMover cameraMover;
+        [SerializeField] private  InputHandler inputHandler;
         public override void InstallBindings()
         {
-            Container.Bind<InputTester>().FromInstance(tester).AsSingle();
+            Container.Bind<SpatialRegion>().AsSingle().NonLazy();
+            Container.Bind<CameraMover>().FromInstance(cameraMover).AsSingle();
             Container.Bind<SceneLoader>().FromInstance(sceneLoader).AsSingle();
             BindInput();
             BindStateMachine();
@@ -25,7 +28,7 @@ namespace Core
         private void BindInput()
         {
             Container.Bind<PlayerInputActions>().AsSingle().NonLazy();
-            Container.Bind<InputHandler>().AsSingle().NonLazy();
+            Container.Bind<InputHandler>().FromInstance(inputHandler).AsSingle();
         }
 
         private void BindStateMachine()

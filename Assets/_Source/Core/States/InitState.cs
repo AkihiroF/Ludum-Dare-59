@@ -8,9 +8,8 @@ namespace Core.States
     public sealed class InitState : AGameState
     {
         [Inject]
-        public InitState(InputHandler inputHandler, PlayerInputActions playerInputActions)
+        public InitState(PlayerInputActions playerInputActions)
         {
-            _inputHandler = inputHandler;
             _playerInputActions = playerInputActions;
         }
 
@@ -19,9 +18,6 @@ namespace Core.States
 
         public override void Enter()
         {
-            _playerInputActions.Player.Look.performed += _inputHandler.InputLook;
-            _playerInputActions.Player.Moving.performed += _inputHandler.InputMove;
-            
             Signals.Get<OnInitFinished>().Dispatch();
         }
     }

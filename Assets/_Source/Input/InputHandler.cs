@@ -1,28 +1,29 @@
+using Camera;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using Zenject;
 
 namespace Input
 {
-    public class InputHandler
+    public class InputHandler : MonoBehaviour
     {
-        private readonly InputTester _tester;
+        private CameraMover _cameraMover;
+        private PlayerInputActions _playerInputActions;
         [Inject]
-        public InputHandler(InputTester tester)
+        public void Init(CameraMover cameraMover, PlayerInputActions playerInputActions)
         {
-            _tester = tester;
+            _cameraMover = cameraMover;
+            _playerInputActions = playerInputActions;
+        }
+        
+        public void InputMove()
+        {
+            var moveValue = _playerInputActions.Player.Moving.ReadValue<Vector2>();
+            _cameraMover.UpdateMove(moveValue);
         }
 
-        public void InputLook(InputAction.CallbackContext obj)
+        private void Update()
         {
-            var lookValue = obj.ReadValue<Vector2>();
-            _tester.UpdateLook(lookValue);
-        }
-
-        public void InputMove(InputAction.CallbackContext obj)
-        {
-            var moveValue = obj.ReadValue<Vector2>();
-            _tester.UpdateMove(moveValue);
+            InputMove();
         }
     }
 }
