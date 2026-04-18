@@ -11,6 +11,7 @@ namespace Core
     public class GameStateSwitcher : MonoBehaviour
     {
         [SerializeField] private WindowStateSwitcher pauseWindow;
+        [SerializeField] private WindowStateSwitcher finishWindow;
         [Inject]
         private StateMachine _stateMachine;
 
@@ -41,6 +42,12 @@ namespace Core
         {
             Signals.Get<OnInitFinished>().RemoveListener(StartGame);
             DOTween.KillAll();
+        }
+
+        public void GameFinished()
+        {
+            finishWindow.ChangeState();
+            _stateMachine.SwitchGameState<PauseState>();
         }
     }
 }

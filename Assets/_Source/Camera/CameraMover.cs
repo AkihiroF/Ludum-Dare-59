@@ -16,8 +16,14 @@ namespace Camera
         {
             settings.area.Init();
             _speedMovement = settings.speedMovement;
-            ResetCameraPosition(settings.area.CenterOfArea);
             _movementFunc = () => settings.area.GetPositionInArea(cinemachineCamera.transform.position + _moveDirection * _speedMovement);
+        }
+
+
+        public void RebuildArea(Vector3[] newPoints)
+        {
+            settings.area.Rebuild(newPoints);
+            ResetCameraPosition(settings.area.CenterOfArea);
         }
 
         public void ResetCameraPosition(Vector3 targetPosition)

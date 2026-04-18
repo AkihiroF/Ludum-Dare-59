@@ -1,5 +1,6 @@
 using Camera.Data;
 using InteractionSystem;
+using UI;
 using UnityEngine;
 
 namespace Camera
@@ -9,6 +10,7 @@ namespace Camera
         [SerializeField] private UnityEngine.Camera targetCamera;
         [SerializeField] private InteractionSettings settings;
         [SerializeField] private AnimationUpdateMode updateMode;
+        [SerializeField] private WindowStateSwitcher interactWindow;
 
         private IInteraction _currentInteraction;
         private void Update()
@@ -34,6 +36,7 @@ namespace Camera
             if (Physics.Raycast(camTransform.position, camTransform.forward, out RaycastHit hit,
                     settings.distanceForInteract, settings.interactionLayer) is false)
             {
+                interactWindow.ChangeState(false);
                 _currentInteraction?.OnLook(false);
                 _currentInteraction = null;
                 return;
@@ -43,6 +46,7 @@ namespace Camera
                 return;
             _currentInteraction = interaction;
             _currentInteraction.OnLook();
+            interactWindow.ChangeState();
         }
     }
 }

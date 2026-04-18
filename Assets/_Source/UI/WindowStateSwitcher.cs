@@ -10,6 +10,7 @@ namespace UI
         [SerializeField] private bool defaultEnabled;
         [SerializeField] private float timeSwitching;
         private CanvasGroup _targetPanel;
+        private bool _isCurrentEnabled;
         
         private void Awake()
         {
@@ -21,6 +22,10 @@ namespace UI
 
         public void ChangeState(bool isEnabled = true)
         {
+            if(_targetPanel is null)
+                return;
+            if(_isCurrentEnabled == isEnabled)
+                return;
             var seq = DOTween.Sequence();
             seq.SetUpdate(true);
             seq.Append(_targetPanel.DOFade(isEnabled ? 1f : 0f, timeSwitching).OnComplete(() => ChangeInteractive(isEnabled)));
@@ -29,6 +34,7 @@ namespace UI
 
         private void ChangeInteractive(bool isEnabled = true)
         {
+            _isCurrentEnabled = isEnabled;
             _targetPanel.interactable = isEnabled;
             _targetPanel.blocksRaycasts = isEnabled;
         }
