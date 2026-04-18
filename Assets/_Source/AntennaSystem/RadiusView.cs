@@ -12,12 +12,11 @@ namespace AntennaSystem
         [SerializeField] private float endAlpha;
         private Renderer _renderer;
         private Material _material;
-        private Vector2 _sizeRange;
-
+        private IAntenna _selfAntenna;
         private bool _currentState;
-        public void Init(AntennaSettings settings)
+        public void Init(IAntenna selfAntenna)
         {
-            _sizeRange = new Vector2(transform.localScale.x, settings.radius * 2);
+            _selfAntenna = selfAntenna;
             _renderer = GetComponent<Renderer>();
             _material = new Material(_renderer.material);
             _renderer.material = _material;
@@ -25,14 +24,14 @@ namespace AntennaSystem
             _currentState = false;
         }
 
-        public void ChangeState(bool isEnabled = true)
+        public void ChangeState(bool isEnabled = true, bool isChanged = false)
         {
-            if(_currentState == isEnabled)
+            if(_currentState == isEnabled && isChanged is false) 
                 return;
             _currentState = isEnabled;
             DOTween.Kill(gameObject);
             var seq = DOTween.Sequence();
-            seq.Append(transform.DOScale(isEnabled ? _sizeRange.y : _sizeRange.x, timeView));
+            seq.Append(transform.DOScale(isEnabled ? _selfAntenna.GetCurrentRadius() *2 : 0, timeView));
             seq.Append(_material.DOColor(isEnabled ? radiusColor : Color.black, timeView));
             seq.Append(_material.DOFade(isEnabled ? endAlpha : 0, timeView));
         }

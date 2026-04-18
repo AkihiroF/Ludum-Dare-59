@@ -9,7 +9,7 @@ using Utils;
 
 namespace AntennaSystem
 {
-    public class AntennaComponent : MonoBehaviour, IInteraction
+    public class AntennaComponent : MonoBehaviour, IInteraction, IAntenna
     {
         [SerializeField] private UnityEvent<AntennaState> onChangeState;
         public bool IsStarted;
@@ -17,7 +17,9 @@ namespace AntennaSystem
         [SerializeField] private RadiusView view;
         [SerializeField] private AntennaHighLightView antennaHighLightView;
         [field: SerializeField] public uint ID { get; private set; }
-        [SerializeField]private List<AntennaComponent>_antennaComponentsInRange = new();
+        private List<AntennaComponent>_antennaComponentsInRange = new();
+        private List<IAntennaModifier> _modifiers = new();
+        
 
         private AntennaState _currentState;
         public bool IsCurrentHasSignal { get; private set; }
@@ -33,15 +35,38 @@ namespace AntennaSystem
 
         private void Awake()
         {
-            view.Init(Settings);
+            view.Init(this);
             SetState(IsStarted ? AntennaState.Enabled : AntennaState.Disabled);
             //view.ChangeState(false); //change state of view radius of antenna
+        }
+        
+        public void AddModifier(IAntennaModifier modifier)
+        {
+            _modifiers.Add(modifier);
+            view.ChangeState(_currentState is not AntennaState.Disabled, true);
+        }
+
+        public void RemoveModifier(IAntennaModifier modifier)
+        {
+            _modifiers.Remove(modifier);
+            view.ChangeState(_currentState is not AntennaState.Disabled, true);
         }
 
         public void OnLook(bool isEnabled = true)
         {
             if(_currentState is AntennaState.Disabled)
                 antennaHighLightView.ChangeScale(isEnabled);
+        }
+        public float GetCurrentRadius()
+        {
+            float value = Settings.radius;
+            Debug.Log(_modifiers.Count);
+            foreach (var mod in _modifiers)
+            {
+                value = mod.Modify(value);
+            }
+
+            return value;
         }
 
         public void Interact()
@@ -112,17 +137,15 @@ namespace AntennaSystem
         private void FindAntennasInRange()
         {
             _antennaComponentsInRange = new();
-            var hits = Physics.SphereCastAll(view.transform.position, Settings.radius, Vector3.up, Settings.radius);
+            var hits = Physics.SphereCastAll(view.transform.position, GetCurrentRadius(), Vector3.up, GetCurrentRadius());
             if(hits is {Length: 0})
                 return;
             foreach (var hit in hits)
             {
                 if(hit.collider is not null)
                     if(hit.collider.TryGetComponent(out AntennaComponent antenna))
-                        if(antenna != this)
-                            // if(Physics.Raycast(view.transform.position, view.transform.position.GetDirection(hit.point), out var hitInfo))
-                            //     if(hitInfo.collider == hit.collider)
-                                    _antennaComponentsInRange.Add(antenna);
+                        if(antenna != this) 
+                            _antennaComponentsInRange.Add(antenna);
             }
         }
 

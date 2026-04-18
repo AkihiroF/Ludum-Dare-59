@@ -498,13 +498,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee20e2ebde2f412180723bfa20744433, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AntennaSystem.AntennaComponent
+  onChangeState:
+    m_PersistentCalls:
+      m_Calls: []
   IsStarted: 0
   <Settings>k__BackingField:
     radius: 5
   view: {fileID: 6959189058163762027}
   antennaHighLightView: {fileID: 8564644759820300069}
   <ID>k__BackingField: 30569561
-  _antennaComponentsInRange: []
 --- !u!1 &6243311631966206697
 GameObject:
   m_ObjectHideFlags: 0
@@ -737,7 +739,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a8688d5098043fd82819583034c0bea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AntennaSystem.RadiusView
-  radiusColor: {r: 0.7735849, g: 0.375258, b: 0.14960839, a: 1}
+  radiusColor: {r: 0, g: 0.10130379, b: 0.764151, a: 1}
   searchColor: {r: 0.29340947, g: 0.7264151, b: 0, a: 1}
   timeView: 0.8
   endAlpha: 0.8
