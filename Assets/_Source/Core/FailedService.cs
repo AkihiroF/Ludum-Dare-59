@@ -40,8 +40,13 @@ namespace Core
             if(_currentAntenna is not null 
                && _currentAntenna.IsCurrentHasSignal 
                && _currentAntenna.HasVariantsForConnect is false 
-               && _currentCountModificator == 0) 
+               && _currentCountModificator == 0)
+            {
+                Debug.Log(_currentAntenna.gameObject.name);
+                Debug.Log(_currentAntenna.HasVariantsForConnect);
+                Debug.Log(_currentCountModificator);
                 gameStateSwitcher.GameFinished(false);
+            }
         }
     }
 }

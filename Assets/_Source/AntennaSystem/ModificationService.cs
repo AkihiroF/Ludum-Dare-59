@@ -36,7 +36,7 @@ namespace AntennaSystem
             _countsOfScale = count;
             _currentModificator = new RadiusBoostModifier(scale);
             modificationView.ChangeCount(scale, count);
-            
+            OnCountModificatorChanged?.Invoke(_countsOfScale);
         }
         
     }

@@ -1,4 +1,3 @@
-using System;
 using Camera;
 using DG.Tweening;
 using UnityEngine;
@@ -15,8 +14,8 @@ namespace AntennaSystem
         [SerializeField] private float speedRotation = 1.5f;
         [SerializeField] private Ease ease = Ease.InOutSine;
         private Tween _moveTween;
-
-        private bool _isEnableLook;
+        
+        private bool _isEnableLook = false;
 
         private void Awake()
         {
@@ -26,6 +25,8 @@ namespace AntennaSystem
 
         public void ChangeState(bool isEnabled)
         {
+            if(isEnabled == _isEnableLook)
+                return;
             _isEnableLook = isEnabled;
             if (wayForMovement == null || wayForMovement.Length == 0)
                 return;

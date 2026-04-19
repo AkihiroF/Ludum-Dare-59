@@ -36,6 +36,11 @@ namespace AntennaSystem
             seq.Append(_material.DOFade(isEnabled ? endAlpha : 0, timeView));
         }
 
+        public void UpdateRadius()
+        {
+            transform.localScale = Vector3.one * _selfAntenna.GetCurrentRadius() * 2f;
+        }
+
         public void ChangeColor(bool isSearch = true)
         {
             _material.DOColor(isSearch ? searchColor : radiusColor, timeView);

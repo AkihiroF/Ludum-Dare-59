@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using AntennaSystem.Data;
 using InteractionSystem;
 using UnityEngine;
@@ -31,6 +32,8 @@ namespace AntennaSystem
         public void AddModifier(IAntennaModifier modifier)
         {
             _modifiers.Add(modifier);
+            if(_currentState is AntennaState.Disabled)
+                return;
             view.ChangeState(_currentState is not AntennaState.Disabled, true);
             UpdateRadius(_currentState is AntennaState.SearchConnection);
         }
@@ -38,8 +41,10 @@ namespace AntennaSystem
         public void RemoveModifier(IAntennaModifier modifier)
         {
             _modifiers.Remove(modifier);
+            if(_currentState is AntennaState.Disabled)
+                return;
             view.ChangeState(_currentState is not AntennaState.Disabled, true);
-            UpdateRadius(_currentState is not AntennaState.Disabled);
+            UpdateRadius(_currentState is AntennaState.SearchConnection);
         }
 
         public void OnLook(bool isEnabled = true)
@@ -102,13 +107,18 @@ namespace AntennaSystem
         private void UpdateRadius(bool isSearch)
         {
             view.ChangeColor(isSearch);
+            var oldAntennas = _antennaComponentsInRange.ToList();
             FindAntennasInRange();
             SignalConnector.SetCurrent(this, _antennaComponentsInRange);
+            
             foreach (var antenna in _antennaComponentsInRange)
             {
+                oldAntennas.Remove(antenna);
                 antenna.enabled = isSearch;
                 antenna.EnableHighLight(isSearch);
             }
+            if(oldAntennas.Count > 0)
+                oldAntennas.ForEach(antenna => antenna.EnableHighLight(false));
         }
         
         public virtual void ReceiveSignalFrom(AntennaComponent from)
@@ -121,7 +131,6 @@ namespace AntennaSystem
 
         private void EnableHighLight(bool isEnabled = true)
         {
-            Debug.Log($"{_currentState} - {isEnabled}");
             antennaHighLightView.ChangeState(isEnabled);
             antennaHighLightView.enabled = isEnabled;
         }
