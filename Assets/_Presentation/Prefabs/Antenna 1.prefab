@@ -4736,8 +4736,8 @@ MonoBehaviour:
   onChangeState:
     m_PersistentCalls:
       m_Calls: []
-  IsStarted: 1
-  DrawRadius: 0
+  IsStarted: 0
+  DrawRadius: 1
   <Settings>k__BackingField:
     radius: 5
   view: {fileID: 5668481123504391342}

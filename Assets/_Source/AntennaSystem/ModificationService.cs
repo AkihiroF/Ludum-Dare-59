@@ -1,4 +1,5 @@
 using System;
+using LevelSystem;
 using UI;
 using UnityEngine;
 
@@ -33,6 +34,9 @@ namespace AntennaSystem
 
         public void ChangeCount(float scale, int count)
         {
+            if(_countsOfScale > 0)
+                StarCounter.AddStar();
+            
             _countsOfScale = count;
             _currentModificator = new RadiusBoostModifier(scale);
             modificationView.ChangeCount(scale, count);
