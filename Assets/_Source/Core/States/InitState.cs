@@ -1,5 +1,6 @@
 using Core.CoreEvents;
 using Input;
+using UnityEngine;
 using Utils;
 using Zenject;
 
@@ -8,16 +9,13 @@ namespace Core.States
     public sealed class InitState : AGameState
     {
         [Inject]
-        public InitState(PlayerInputActions playerInputActions)
+        public InitState()
         {
-            _playerInputActions = playerInputActions;
         }
-
-        private readonly InputHandler _inputHandler;
-        private readonly PlayerInputActions _playerInputActions;
 
         public override void Enter()
         {
+            Time.timeScale = 1;
             Signals.Get<OnInitFinished>().Dispatch();
         }
     }

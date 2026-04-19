@@ -32,6 +32,8 @@ namespace LevelSystem
 
         private void Start()
         {
+            if(StarCounter.CurrentIndexLevel > 0)
+                _currentIndex = StarCounter.CurrentIndexLevel;
             ChangeLevel();
         }
 
@@ -44,7 +46,9 @@ namespace LevelSystem
                 gameStateSwitcher.GameFinished(true);
                 return;
             }
-
+            StarCounter.UpdateIndexLevel();
+            if(modificationService.CountsOfScale > 0)
+                StarCounter.AddStar();
             ChangeLevel();
         }
 
