@@ -1,3 +1,4 @@
+using System;
 using Core.CoreEvents;
 using Core.States;
 using DG.Tweening;
@@ -10,6 +11,7 @@ namespace Core
 {
     public class GameStateSwitcher : MonoBehaviour
     {
+        [SerializeField] private bool isTutor;
         [SerializeField] private WindowStateSwitcher pauseWindow;
         [SerializeField] private WindowStateSwitcher finishWindow;
         [SerializeField] private WindowStateSwitcher failedWindow;
@@ -19,6 +21,12 @@ namespace Core
         private void Awake()
         {
             Signals.Get<OnInitFinished>().AddListener(StartGame);
+        }
+
+        private void Start()
+        {
+            if(isTutor)
+                _stateMachine.SwitchGameState<PauseState>();
         }
 
         public void StartGame()
@@ -32,6 +40,7 @@ namespace Core
             pauseWindow.ChangeState();
             _stateMachine.SwitchGameState<PauseState>();
         }
+        
 
         public void ExitGame()
         {
