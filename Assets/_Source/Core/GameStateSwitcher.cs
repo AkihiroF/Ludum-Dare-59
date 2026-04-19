@@ -1,4 +1,3 @@
-using System;
 using Core.CoreEvents;
 using Core.States;
 using DG.Tweening;
@@ -31,6 +30,7 @@ namespace Core
 
         public void StartGame()
         {
+            Debug.Log("Start");
             pauseWindow.ChangeState(false);
             _stateMachine.SwitchGameState<GameState>();
         }
