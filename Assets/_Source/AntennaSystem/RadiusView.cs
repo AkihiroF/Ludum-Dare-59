@@ -20,7 +20,7 @@ namespace AntennaSystem
             _renderer = GetComponent<Renderer>();
             _material = new Material(_renderer.material);
             _renderer.material = _material;
-            _material.color = Color.black;
+            _material.color = radiusColor;
             _currentState = false;
         }
 
@@ -32,7 +32,7 @@ namespace AntennaSystem
             DOTween.Kill(gameObject);
             var seq = DOTween.Sequence();
             seq.Append(transform.DOScale(isEnabled ? _selfAntenna.GetCurrentRadius() *2 : 0, timeView));
-            seq.Append(_material.DOColor(isEnabled ? radiusColor : Color.black, timeView));
+            //seq.Append(_material.DOColor(isEnabled ? radiusColor : Color.black, timeView));
             seq.Append(_material.DOFade(isEnabled ? endAlpha : 0, timeView));
         }
 

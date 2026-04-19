@@ -1,4 +1,3 @@
-using Core;
 using LevelSystem;
 using UnityEngine;
 
@@ -9,7 +8,7 @@ namespace AntennaSystem
         [SerializeField] private LevelSwitcher levelSwitcher;
         public override void ReceiveSignalFrom(AntennaComponent from)
         {
-            base.ReceiveSignalFrom(from);
+            //base.ReceiveSignalFrom(from);
             levelSwitcher.NextLevel();
         }
     }

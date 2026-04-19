@@ -1,35 +1,37 @@
+using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace AntennaSystem
 {
     public static class SignalConnector
     {
-        private static AntennaComponent _currentAntenna;
+        public static Action<AntennaComponent> CurrentAntennaChanged;
+        public static AntennaComponent CurrentAntenna { get; private set; }
         private static List<AntennaComponent> _awailableAntennas;
 
         public static void SetCurrent(AntennaComponent antenna, List<AntennaComponent> awailableAntennas)
         {
-            _currentAntenna = antenna;
+            CurrentAntenna = antenna;
             _awailableAntennas = awailableAntennas;
         }
 
         public static void TryConnect(AntennaComponent to)
         {
-            if(_currentAntenna is null)
+            if(CurrentAntenna is null)
                 return;
-            if (to == _currentAntenna)
+            if (to == CurrentAntenna)
             {
-                _currentAntenna = null;
+                CurrentAntenna = null;
                 _awailableAntennas = null;
                 return;
             }
-            if(_awailableAntennas.Contains(to))
-            {
-                to.ReceiveSignalFrom(_currentAntenna);
-                _currentAntenna = null;
-                _awailableAntennas = null;
-            }
+
+            if (!_awailableAntennas.Contains(to)) 
+                return;
+            to.ReceiveSignalFrom(CurrentAntenna);
+            CurrentAntenna = null;
+            _awailableAntennas = null;
+            CurrentAntennaChanged?.Invoke(to);
         }
     }
 }

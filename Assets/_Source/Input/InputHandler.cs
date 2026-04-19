@@ -1,4 +1,5 @@
 using System;
+using AntennaSystem;
 using Camera;
 using Core;
 using UnityEngine;
@@ -12,6 +13,7 @@ namespace Input
         [SerializeField] private CameraMover cameraMover;
         [SerializeField] private CameraInteraction cameraInteraction;
         [SerializeField] private GameStateSwitcher gameStateSwitcher;
+        [SerializeField] private ModificationService modificationService;
         private PlayerInputActions _playerInputActions;
         [Inject]
         public void Init(PlayerInputActions playerInputActions)
@@ -24,8 +26,14 @@ namespace Input
         {
             _playerInputActions.Player.Sprint.performed += OnSprint;
             _playerInputActions.Player.Interact.performed += OnInteract;
+            _playerInputActions.Player.Modificator.performed += OnActivateModificator;
 
             _playerInputActions.Interface.Paused.performed += TurnOnPause;
+        }
+
+        private void OnActivateModificator(InputAction.CallbackContext obj)
+        {
+            modificationService.TryUseModification();
         }
 
         private void TurnOnPause(InputAction.CallbackContext obj)
@@ -59,6 +67,7 @@ namespace Input
         {
             _playerInputActions.Player.Sprint.performed -= OnSprint;
             _playerInputActions.Player.Interact.performed -= OnInteract;
+            _playerInputActions.Player.Modificator.performed -= OnActivateModificator;
 
             _playerInputActions.Interface.Paused.performed -= TurnOnPause;
         }

@@ -4,16 +4,16 @@ namespace AntennaSystem
 {
     public class RadiusBoostModifier : IAntennaModifier
     {
-        private float _multiplier;
+        public readonly float Multiplier;
 
         public RadiusBoostModifier(float multiplier)
         {
-            _multiplier = multiplier;
+            Multiplier = multiplier;
         }
 
         public float Modify(float baseValue)
         {
-            return baseValue * _multiplier;
+            return baseValue * Multiplier;
         }
     }
 }

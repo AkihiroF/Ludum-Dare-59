@@ -12,6 +12,7 @@ namespace Core
     {
         [SerializeField] private WindowStateSwitcher pauseWindow;
         [SerializeField] private WindowStateSwitcher finishWindow;
+        [SerializeField] private WindowStateSwitcher failedWindow;
         [Inject]
         private StateMachine _stateMachine;
 
@@ -44,9 +45,10 @@ namespace Core
             DOTween.KillAll();
         }
 
-        public void GameFinished()
+        public void GameFinished(bool isComplete)
         {
-            finishWindow.ChangeState();
+            var targetWindow = isComplete ? finishWindow : failedWindow;
+            targetWindow.ChangeState();
             _stateMachine.SwitchGameState<PauseState>();
         }
     }

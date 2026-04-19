@@ -8,35 +8,42 @@ namespace UI
     public class WindowStateSwitcher : MonoBehaviour
     {
         [SerializeField] private bool defaultEnabled;
-        [SerializeField] private float timeSwitching;
-        private CanvasGroup _targetPanel;
+        [SerializeField] protected float timeSwitching;
+        protected Tween Tween;
+        protected CanvasGroup TargetPanel;
         private bool _isCurrentEnabled;
         
-        private void Awake()
+        protected virtual void Awake()
         {
-            _targetPanel = GetComponent<CanvasGroup>();
+            TargetPanel = GetComponent<CanvasGroup>();
             
-            _targetPanel.alpha = defaultEnabled ? 1 : 0;
+            TargetPanel.alpha = defaultEnabled ? 1 : 0;
             ChangeInteractive(defaultEnabled);
         }
 
         public void ChangeState(bool isEnabled = true)
         {
-            if(_targetPanel is null)
+            if(TargetPanel is null)
                 return;
             if(_isCurrentEnabled == isEnabled)
                 return;
-            var seq = DOTween.Sequence();
-            seq.SetUpdate(true);
-            seq.Append(_targetPanel.DOFade(isEnabled ? 1f : 0f, timeSwitching).OnComplete(() => ChangeInteractive(isEnabled)));
-            seq.Play();
+            Tween?.Kill();
+            BuildAnimation(isEnabled);
+            Tween.Play();
         }
 
-        private void ChangeInteractive(bool isEnabled = true)
+        protected virtual void BuildAnimation(bool isEnabled = true)
+        {
+            //var seq = DOTween.Sequence();
+            Tween = TargetPanel.DOFade(isEnabled ? 1f : 0f, timeSwitching).OnComplete(() => ChangeInteractive(isEnabled));
+            Tween.SetUpdate(true);
+        }
+
+        protected void ChangeInteractive(bool isEnabled = true)
         {
             _isCurrentEnabled = isEnabled;
-            _targetPanel.interactable = isEnabled;
-            _targetPanel.blocksRaycasts = isEnabled;
+            TargetPanel.interactable = isEnabled;
+            TargetPanel.blocksRaycasts = isEnabled;
         }
     }
 }

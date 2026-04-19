@@ -16,22 +16,13 @@ namespace AntennaSystem
         [field: SerializeField] public AntennaSettings Settings { get; private set; }
         [SerializeField] private RadiusView view;
         [SerializeField] private AntennaHighLightView antennaHighLightView;
-        [field: SerializeField] public uint ID { get; private set; }
+        public bool HasVariantsForConnect => _antennaComponentsInRange.Count > 0;
         private List<AntennaComponent>_antennaComponentsInRange = new();
         private List<IAntennaModifier> _modifiers = new();
         
 
         private AntennaState _currentState;
         public bool IsCurrentHasSignal { get; private set; }
-
-#if UNITY_EDITOR
-        [ContextMenu("Generate ID")]
-        public void GenerateID()
-        {
-            ID = Guid.NewGuid().ToUint();
-            EditorUtility.SetDirty(this);
-        }
-#endif
 
         private void Awake()
         {
@@ -44,12 +35,14 @@ namespace AntennaSystem
         {
             _modifiers.Add(modifier);
             view.ChangeState(_currentState is not AntennaState.Disabled, true);
+            UpdateRadius(_currentState is AntennaState.SearchConnection);
         }
 
         public void RemoveModifier(IAntennaModifier modifier)
         {
             _modifiers.Remove(modifier);
             view.ChangeState(_currentState is not AntennaState.Disabled, true);
+            UpdateRadius(_currentState is not AntennaState.Disabled);
         }
 
         public void OnLook(bool isEnabled = true)
@@ -60,12 +53,10 @@ namespace AntennaSystem
         public float GetCurrentRadius()
         {
             float value = Settings.radius;
-            Debug.Log(_modifiers.Count);
             foreach (var mod in _modifiers)
             {
                 value = mod.Modify(value);
             }
-
             return value;
         }
 
@@ -97,26 +88,26 @@ namespace AntennaSystem
                     break;
                 case AntennaState.Enabled:
                     view.ChangeState();
-                    view.ChangeColor(false);
-                    FindAntennasInRange();
-                    foreach (var antenna in _antennaComponentsInRange)
-                    {
-                        antenna.EnableHighLight(false);
-                        antenna.enabled = false;
-                    }
+                    UpdateRadius(false);
                     SignalConnector.SetCurrent(null, null);
                     break;
                 case AntennaState.SearchConnection:
-                    view.ChangeColor();
                     view.ChangeState();
-                    FindAntennasInRange();
-                    foreach (var antenna in _antennaComponentsInRange)
-                    {
-                        antenna.enabled = true;
-                        antenna.EnableHighLight();
-                    }
+                    UpdateRadius(true);
                     SignalConnector.SetCurrent(this, _antennaComponentsInRange);
                     break;
+            }
+        }
+
+        private void UpdateRadius(bool isSearch)
+        {
+            view.ChangeColor(isSearch);
+            FindAntennasInRange();
+            SignalConnector.SetCurrent(this, _antennaComponentsInRange);
+            foreach (var antenna in _antennaComponentsInRange)
+            {
+                antenna.enabled = isSearch;
+                antenna.EnableHighLight(isSearch);
             }
         }
         
