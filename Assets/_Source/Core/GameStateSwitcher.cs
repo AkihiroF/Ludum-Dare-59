@@ -30,7 +30,6 @@ namespace Core
 
         public void StartGame()
         {
-            Debug.Log("Start");
             pauseWindow.ChangeState(false);
             _stateMachine.SwitchGameState<GameState>();
         }
