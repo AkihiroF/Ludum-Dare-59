@@ -1,11 +1,8 @@
-using System;
 using System.Collections.Generic;
 using AntennaSystem.Data;
 using InteractionSystem;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
-using Utils;
 
 namespace AntennaSystem
 {
@@ -13,6 +10,7 @@ namespace AntennaSystem
     {
         [SerializeField] private UnityEvent<AntennaState> onChangeState;
         public bool IsStarted;
+        public bool DrawRadius;
         [field: SerializeField] public AntennaSettings Settings { get; private set; }
         [SerializeField] private RadiusView view;
         [SerializeField] private AntennaHighLightView antennaHighLightView;
@@ -28,7 +26,6 @@ namespace AntennaSystem
         {
             view.Init(this);
             SetState(IsStarted ? AntennaState.Enabled : AntennaState.Disabled);
-            //view.ChangeState(false); //change state of view radius of antenna
         }
         
         public void AddModifier(IAntennaModifier modifier)
@@ -85,14 +82,17 @@ namespace AntennaSystem
                     view.ChangeState(false);
                     IsCurrentHasSignal = false;
                     EnableHighLight(false);
+                    UpdateRadius(false);
                     break;
                 case AntennaState.Enabled:
+                    EnableHighLight(false);
                     view.ChangeState();
                     UpdateRadius(false);
                     SignalConnector.SetCurrent(null, null);
                     break;
                 case AntennaState.SearchConnection:
                     view.ChangeState();
+                    EnableHighLight();
                     UpdateRadius(true);
                     SignalConnector.SetCurrent(this, _antennaComponentsInRange);
                     break;
@@ -121,6 +121,7 @@ namespace AntennaSystem
 
         private void EnableHighLight(bool isEnabled = true)
         {
+            Debug.Log($"{_currentState} - {isEnabled}");
             antennaHighLightView.ChangeState(isEnabled);
             antennaHighLightView.enabled = isEnabled;
         }
@@ -142,7 +143,8 @@ namespace AntennaSystem
 
         private void OnDrawGizmosSelected()
         {
-            //Gizmos.DrawSphere(transform.position, Settings.radius);
+            if(DrawRadius && view is not null)
+                Gizmos.DrawSphere(view.transform.position, Settings.radius);
         }
     }
 }

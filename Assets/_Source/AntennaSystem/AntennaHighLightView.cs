@@ -1,19 +1,32 @@
+using System;
+using Camera;
 using DG.Tweening;
 using UnityEngine;
+using Utils;
 
 namespace AntennaSystem
 {
     public class AntennaHighLightView : MonoBehaviour
     {
         [SerializeField] private Transform[] wayForMovement;
+        [SerializeField] private Transform rootOfAntenna;
+        [SerializeField] private CameraInteraction cameraInteraction;
         [SerializeField] private float duration = 0.5f;
-        [SerializeField] private float maxScale = 1.5f;
-        [SerializeField] private float durationScale = 0.5f;
+        [SerializeField] private float speedRotation = 1.5f;
         [SerializeField] private Ease ease = Ease.InOutSine;
         private Tween _moveTween;
-        
+
+        private bool _isEnableLook;
+
+        private void Awake()
+        {
+            cameraInteraction ??= FindAnyObjectByType<CameraInteraction>();
+            rootOfAntenna ??= transform;
+        }
+
         public void ChangeState(bool isEnabled)
         {
+            _isEnableLook = isEnabled;
             if (wayForMovement == null || wayForMovement.Length == 0)
                 return;
             _moveTween?.Kill();
@@ -23,10 +36,32 @@ namespace AntennaSystem
                 .SetEase(ease);
         }
 
+        private void Update()
+        {
+            if (_isEnableLook is false)
+                return;
+            if(cameraInteraction is null)
+                return;
+            var target = cameraInteraction.CurrentPoint;
+            var direction = rootOfAntenna.position.GetDirection(target, false);
+            direction.y = 0;
+            if (direction.sqrMagnitude < 0.001f)
+                return;
+            float targetY = Quaternion.LookRotation(direction).eulerAngles.y;
+            float newY = Mathf.LerpAngle(
+                rootOfAntenna.eulerAngles.y,
+                targetY,
+                Time.deltaTime * speedRotation
+            );
+            rootOfAntenna.rotation = Quaternion.Euler(
+                rootOfAntenna.eulerAngles.x,
+                newY,
+                rootOfAntenna.eulerAngles.z
+            );
+        }
+
         public void ChangeScale(bool isBigger = true)
         {
-            if(enabled)
-                transform.DOScale(isBigger ? maxScale : 1, durationScale);
         }
         private Vector3[] GetPathForward()
         {

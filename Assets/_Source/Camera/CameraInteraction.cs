@@ -11,6 +11,7 @@ namespace Camera
         [SerializeField] private InteractionSettings settings;
         [SerializeField] private AnimationUpdateMode updateMode;
         [SerializeField] private WindowStateSwitcher interactWindow;
+        public Vector3 CurrentPoint { get; private set; }
 
         private IInteraction _currentInteraction;
         private void Update()
@@ -34,14 +35,16 @@ namespace Camera
         {
             var camTransform = targetCamera.transform;
             if (Physics.Raycast(camTransform.position, camTransform.forward, out RaycastHit hit,
-                    settings.distanceForInteract, settings.interactionLayer) is false)
+                    settings.distanceForInteract) is false)
             {
                 interactWindow.ChangeState(false);
                 _currentInteraction?.OnLook(false);
                 _currentInteraction = null;
+                
+                CurrentPoint = camTransform.position + camTransform.forward * settings.distanceForInteract;
                 return;
             }
-
+            CurrentPoint = hit.point;
             if (hit.collider.TryGetComponent(out IInteraction interaction) is false) 
                 return;
             _currentInteraction = interaction;
